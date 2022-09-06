@@ -27,8 +27,8 @@ SECRET_KEY = 'django-insecure-865kh@-i1sgxp#p60he%i2qwz7tyb5t)^u7-irsqvz#_(7n3+4
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['localhost','127.0.0.1','piriecommerce.pythonanywhere.com']
-# ALLOWED_HOSTS = []
+ALLOWED_HOSTS = []
+
 
 
 # Application definition
@@ -83,23 +83,14 @@ WSGI_APPLICATION = 'ecommerce.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
-#DATABASES = {
-#    'default': {
-#        'ENGINE': 'django.db.backends.mysql',
-#        'NAME': 'ecommerce',
-#        'USER': 'root',
-#        'PASSWORD': 'M123456M',
-#        'HOST': 'localhost'
-#    }
-#}
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'piriecommerce$E-Commerce',
-        'USER': 'piriecommerce',
-        'PASSWORD': 'M123456M',
-        'HOST': 'piriecommerce.mysql.pythonanywhere-services.com'
+        'NAME': 'peaceful_ptolemy',
+        'USER': 'root',
+        'PASSWORD': 'yIxd0HCNffHERfhYZZe6PT73',
+        'HOST': 'polly.iran.liara.ir',
+        'PORT': '34560'
     }
 }
 
