@@ -25,10 +25,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-865kh@-i1sgxp#p60he%i2qwz7tyb5t)^u7-irsqvz#_(7n3+4'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = []
-
 
 
 # Application definition
@@ -130,7 +129,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 STATIC_URL = 'static/'
-STATIC_ROOT=os.path.join(BASE_DIR,'static')
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
@@ -143,23 +142,23 @@ INTERNAL_IPS = [
     # ...
 ]
 
-REST_FRAMEWORK={
-    'COERCE_DECIMAL_TO_STRING':False,
-     'DEFAULT_AUTHENTICATION_CLASSES': (
+REST_FRAMEWORK = {
+    'COERCE_DECIMAL_TO_STRING': False,
+    'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
 }
 
-AUTH_USER_MODEL='user.User'
+AUTH_USER_MODEL = 'user.User'
 
 SIMPLE_JWT = {
-   'AUTH_HEADER_TYPES': ('JWT',),
-   'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
+    'AUTH_HEADER_TYPES': ('JWT',),
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
 }
 
-DJOSER={
-    'SERIALIZERS':{
-    'user_create': 'user.serializers.RegisterSerializer',
-    'current_user': 'user.serializers.CurrentUserSerializer',
+DJOSER = {
+    'SERIALIZERS': {
+        'user_create': 'user.serializers.RegisterSerializer',
+        'current_user': 'user.serializers.CurrentUserSerializer',
     },
 }
