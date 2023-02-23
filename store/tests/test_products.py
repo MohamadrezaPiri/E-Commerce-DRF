@@ -12,6 +12,13 @@ def create_product(api_client):
     return do_create_product
 
 
+@pytest.fixture
+def update_product(api_client):
+    def do_update_product(product_id, product):
+        return api_client.put(f'/products/{product_id}/', product)
+    return do_update_product
+
+
 @pytest.mark.django_db
 class TestCreateProduct:
     def test_if_user_is_anonymous_returns_401(self, create_product):
@@ -51,3 +58,53 @@ class TestCreateProduct:
                                   "unit_price": 20, "inventory": 10, "collection": collection.id})
 
         assert response.status_code == status.HTTP_400_BAD_REQUEST
+
+
+@pytest.mark.django_db
+class TestUpdateProduct:
+    def test_if_user_is_anonymous_returns_401(self, update_product):
+        product = baker.make(Product)
+
+        response = update_product(product.id, {"title": 'a', "description": 'aa',
+                                  "unit_price": 22.00, "inventory": 10, "collection": product.collection.id})
+
+        assert response.status_code == status.HTTP_401_UNAUTHORIZED
+
+    def test_if_user_is_not_admin_returns_403(self, update_product, authenticate):
+        product = baker.make(Product)
+        user = baker.make(User)
+
+        authenticate(user=user)
+        response = update_product(product.id, {"title": 'a', "description": 'aa',
+                                  "unit_price": 22.00, "inventory": 10, "collection": product.collection.id})
+
+        assert response.status_code == status.HTTP_403_FORBIDDEN
+
+    def test_if_product_does_not_exist_returns_404(self, update_product, authenticate):
+        admin = baker.make(User, is_staff=True)
+
+        authenticate(user=admin)
+        response = update_product(1, {"title": 'a', "description": 'aa',
+                                      "unit_price": 22.00, "inventory": 10, "collection": 1})
+
+        assert response.status_code == status.HTTP_404_NOT_FOUND
+
+    def test_if_data_is_not_valid_returns_400(self, update_product, authenticate):
+        product = baker.make(Product)
+        admin = baker.make(User, is_staff=True)
+
+        authenticate(user=admin)
+        response = update_product(product.id, {"title": '', "description": 'aa',
+                                  "unit_price": 22.00, "inventory": 10, "collection": product.collection.id})
+
+        assert response.status_code == status.HTTP_400_BAD_REQUEST
+
+    def test_if_user_is_admin_returns_200(self, update_product, authenticate):
+        product = baker.make(Product)
+        admin = baker.make(User, is_staff=True)
+
+        authenticate(user=admin)
+        response = update_product(product.id, {"title": 'a', "description": 'aa',
+                                  "unit_price": 22.00, "inventory": 10, "collection": product.collection.id})
+
+        assert response.status_code == status.HTTP_200_OK
