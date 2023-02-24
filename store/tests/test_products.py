@@ -170,3 +170,19 @@ class TestGetProductsList:
         response = api_client.get('/products/')
 
         assert response.status_code == status.HTTP_200_OK
+
+
+@pytest.mark.django_db
+class TestRetrieveProduct:
+    def test_if_produtc_is_retrieved_returns_200(self, api_client):
+        product = baker.make(Product)
+
+        response = api_client.get(f'/products/{product.id}/')
+
+        assert response.status_code == status.HTTP_200_OK
+
+    def test_if_produtc_does_not_exist_returns_404(self, api_client):
+
+        response = api_client.get('/products/1/')
+
+        assert response.status_code == status.HTTP_404_NOT_FOUND
