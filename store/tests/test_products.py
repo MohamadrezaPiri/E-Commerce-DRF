@@ -161,3 +161,12 @@ class TestDeleteProduct:
         response = delete_product(product.id)
 
         assert response.status_code == status.HTTP_204_NO_CONTENT
+
+
+@pytest.mark.django_db
+class TestGetProductsList:
+    def test_if_returns_200(self, api_client):
+
+        response = api_client.get('/products/')
+
+        assert response.status_code == status.HTTP_200_OK
