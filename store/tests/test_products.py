@@ -2,7 +2,7 @@ import pytest
 from user.models import User
 from rest_framework import status
 from model_bakery import baker
-from store.models import Product, Collection
+from store.models import Product, Collection, OrderItem
 
 
 @pytest.fixture
@@ -17,6 +17,13 @@ def update_product(api_client):
     def do_update_product(product_id, product):
         return api_client.put(f'/products/{product_id}/', product)
     return do_update_product
+
+
+@pytest.fixture
+def delete_product(api_client):
+    def do_delete_product(product_id):
+        return api_client.delete(f'/products/{product_id}/')
+    return do_delete_product
 
 
 @pytest.mark.django_db
@@ -108,3 +115,49 @@ class TestUpdateProduct:
                                   "unit_price": 22.00, "inventory": 10, "collection": product.collection.id})
 
         assert response.status_code == status.HTTP_200_OK
+
+
+@pytest.mark.django_db
+class TestDeleteProduct:
+    def test_if_user_is_anonymus_returns_401(self, delete_product):
+        product = baker.make(Product)
+
+        response = delete_product(product.id)
+
+        assert response.status_code == status.HTTP_401_UNAUTHORIZED
+
+    def test_if_user_is_not_admin_returns_403(self, delete_product, authenticate):
+        product = baker.make(Product)
+        user = baker.make(User)
+
+        authenticate(user=user)
+        response = delete_product(product.id)
+
+        assert response.status_code == status.HTTP_403_FORBIDDEN
+
+    def test_if_product_does_not_exist_returns_404(self, delete_product, authenticate):
+        admin = baker.make(User, is_staff=True)
+
+        authenticate(user=admin)
+        response = delete_product(1)
+
+        assert response.status_code == status.HTTP_404_NOT_FOUND
+
+    def test_if_product_has_been_ordered_returns_405(self, delete_product, authenticate):
+        product = baker.make(Product)
+        orderitem = baker.make(OrderItem, product=product)
+        admin = baker.make(User, is_staff=True)
+
+        authenticate(user=admin)
+        response = delete_product(product.id)
+
+        assert response.status_code == status.HTTP_405_METHOD_NOT_ALLOWED
+
+    def test_if_user_is_admin_returns_204(self, delete_product, authenticate):
+        product = baker.make(Product)
+        admin = baker.make(User, is_staff=True)
+
+        authenticate(user=admin)
+        response = delete_product(product.id)
+
+        assert response.status_code == status.HTTP_204_NO_CONTENT
