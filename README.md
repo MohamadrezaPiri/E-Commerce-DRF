@@ -23,5 +23,3 @@ py manage.py migrate
 ```
 py manage.py runserver
 ```
-## Usage
-- Use __[ModHeader](https://chrome.google.com/webstore/detail/modheader-modify-http-hea/idgpnmonknjnojddfkpgkljpfnnfcklj)__ extention for JWT Authentication
