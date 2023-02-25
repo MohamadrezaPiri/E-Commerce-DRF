@@ -87,3 +87,41 @@ class TestUpdateCollection:
         response = update_collection(collection.id, {"title": 'a'})
 
         assert response.status_code == status.HTTP_200_OK
+        
+@pytest.mark.django_db
+class TestDeleteCollection:
+    def test_if_user_is_anonymous_returns_401(self, delete_collection):
+        collection = baker.make(Collection)
+
+        response = delete_collection(collection.id)
+
+        assert response.status_code == status.HTTP_401_UNAUTHORIZED
+
+    def test_if_user_is_not_admin_returns_403(self, delete_collection, authenticate):
+        collection = baker.make(Collection)
+        user = baker.make(User)
+
+        authenticate(user=user)
+        response = delete_collection(collection.id)
+
+        assert response.status_code == status.HTTP_403_FORBIDDEN
+
+    def test_if_collection_contains_products_returns_405(self, delete_collection, authenticate):
+        collection = baker.make(Collection)
+        product = baker.make(Product, collection=collection)
+        admin = baker.make(User, is_staff=True)
+
+        authenticate(user=admin)
+        response = delete_collection(collection.id)
+
+        assert response.status_code == status.HTTP_405_METHOD_NOT_ALLOWED
+
+    def test_if_user_is_admin_returns_204(self, delete_collection, authenticate):
+        collection = baker.make(Collection)
+        admin = baker.make(User, is_staff=True)
+
+        authenticate(user=admin)
+        response = delete_collection(collection.id)
+
+        assert response.status_code == status.HTTP_204_NO_CONTENT
+    
