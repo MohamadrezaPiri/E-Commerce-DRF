@@ -2,7 +2,7 @@ import pytest
 from model_bakery import baker
 from rest_framework import status
 from user.models import User
-from store.models import Collection
+from store.models import Collection, Product
 
 
 @pytest.fixture
@@ -17,6 +17,13 @@ def update_collection(api_client):
     def do_update_collection(collection_id, collection):
         return api_client.put(f'/collections/{collection_id}/', collection)
     return do_update_collection
+
+
+@pytest.fixture
+def delete_collection(api_client):
+    def do_delete_collection(collection_id):
+        return api_client.delete(f'/collections/{collection_id}/')
+    return do_delete_collection
 
 
 @pytest.mark.django_db
@@ -87,7 +94,8 @@ class TestUpdateCollection:
         response = update_collection(collection.id, {"title": 'a'})
 
         assert response.status_code == status.HTTP_200_OK
-        
+
+
 @pytest.mark.django_db
 class TestDeleteCollection:
     def test_if_user_is_anonymous_returns_401(self, delete_collection):
@@ -124,4 +132,12 @@ class TestDeleteCollection:
         response = delete_collection(collection.id)
 
         assert response.status_code == status.HTTP_204_NO_CONTENT
-    
+
+
+@pytest.mark.django_db
+class TestGetCollectionsList:
+    def test_if_returns_200(self, api_client):
+
+        response = api_client.get('/collections/')
+
+        assert response.status_code == status.HTTP_200_OK
