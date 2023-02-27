@@ -2,6 +2,7 @@ from django.shortcuts import get_object_or_404
 from django.db.models import Count
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status
+from rest_framework.exceptions import NotFound
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser, IsAuthenticatedOrReadOnly
 from rest_framework.filters import SearchFilter, OrderingFilter
@@ -62,7 +63,12 @@ class ReviewsViewSet(ModelViewSet):
 
     def get_queryset(self):
         product_id = self.kwargs["product_pk"]
-        return Reviews.objects.filter(product_id=product_id)
+        review = Reviews.objects.filter(product_id=product_id)
+
+        if review.exists():
+            return review
+        else:
+            raise NotFound('There is no product with the given ID')
 
     def get_serializer_context(self):
         return {"product_id": self.kwargs['product_pk']}
