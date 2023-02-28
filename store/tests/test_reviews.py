@@ -194,3 +194,21 @@ class TestGetReviewsList:
         response = api_client.get(f'/products/{product.id}/reviews/')
 
         assert response.status_code == status.HTTP_200_OK
+
+
+@pytest.mark.django_db
+class TestRetrieveReview:
+    def test_if_review_does_not_exist_returns_404(self, api_client):
+        product = baker.make(Product)
+
+        response = api_client.get(f'/products/{product.id}/reviews/1/')
+
+        assert response.status_code == status.HTTP_404_NOT_FOUND
+
+    def test_if_review_exists_returns_200(self, api_client):
+        review = baker.make(Reviews)
+
+        response = api_client.get(
+            f'/products/{review.product.id}/reviews/{review.id}/')
+
+        assert response.status_code == status.HTTP_200_OK
