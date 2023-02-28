@@ -19,6 +19,13 @@ def update_review(api_client):
     return do_update_review
 
 
+@pytest.fixture
+def delete_review(api_client):
+    def do_delete_review(product_id, review_id):
+        return api_client.delete(f'/products/{product_id}/reviews/{review_id}/')
+    return do_delete_review
+
+
 @pytest.mark.django_db
 class TestCreateReview:
     def test_if_user_is_anonymous_returns_401(self, create_review):
@@ -112,3 +119,54 @@ class TestUpdateReview:
             review={'description': 'a'})
 
         assert response.status_code == status.HTTP_200_OK
+
+
+@pytest.mark.django_db
+class TestDeleteReview:
+    def test_if_user_is_anonymous_returns_401(self, delete_review):
+        review = baker.make(Reviews)
+
+        response = delete_review(
+            product_id=review.product.id,
+            review_id=review.id
+        )
+
+        assert response.status_code == status.HTTP_401_UNAUTHORIZED
+
+    def test_if_user_is_not_author_returns_403(self, delete_review, authenticate):
+        author = baker.make(User)
+        user = baker.make(User)
+        review = baker.make(Reviews, user=author)
+
+        authenticate(user=user)
+        response = delete_review(
+            product_id=review.product.id,
+            review_id=review.id
+        )
+
+        assert response.status_code == status.HTTP_403_FORBIDDEN
+
+    def test_if_user_is_admin_returns_204(self, delete_review, authenticate):
+        author = baker.make(User)
+        admin = baker.make(User, is_staff=True)
+        review = baker.make(Reviews, user=author)
+
+        authenticate(user=admin)
+        response = delete_review(
+            product_id=review.product.id,
+            review_id=review.id
+        )
+
+        assert response.status_code == status.HTTP_204_NO_CONTENT
+
+    def test_if_user_is_author_returns_204(self, delete_review, authenticate):
+        author = baker.make(User)
+        review = baker.make(Reviews, user=author)
+
+        authenticate(user=author)
+        response = delete_review(
+            product_id=review.product.id,
+            review_id=review.id
+        )
+
+        assert response.status_code == status.HTTP_204_NO_CONTENT
