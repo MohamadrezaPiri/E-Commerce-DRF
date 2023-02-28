@@ -68,7 +68,7 @@ class ReviewsViewSet(ModelViewSet):
         if review.exists():
             return review
         else:
-            raise NotFound('There is no product with the given ID')
+            raise NotFound('There is no product or review')
 
     def get_serializer_context(self):
         return {"product_id": self.kwargs['product_pk'], "user_id": self.request.user.id}
