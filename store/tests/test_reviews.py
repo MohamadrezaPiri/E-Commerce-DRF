@@ -25,7 +25,7 @@ class TestCreateReview:
         product = baker.make(Product)
 
         response = create_review(product_id=product.id, review={
-                                 'name': 'a', 'description': 'aa'})
+            'description': 'aa'})
 
         assert response.status_code == status.HTTP_401_UNAUTHORIZED
 
@@ -35,12 +35,9 @@ class TestCreateReview:
 
         authenticate(user=user)
         response = create_review(product_id=product.id, review={
-                                 'name': '', 'description': 'aa'})
-        response2 = create_review(product_id=product.id, review={
-                                  'name': 'a', 'description': ''})
+            'description': ''})
 
         assert response.status_code == status.HTTP_400_BAD_REQUEST
-        assert response2.status_code == status.HTTP_400_BAD_REQUEST
 
     def test_if_data_is_valid_returns_201(self, create_review, authenticate):
         user = baker.make(User)
@@ -48,6 +45,70 @@ class TestCreateReview:
 
         authenticate(user=user)
         response = create_review(product_id=product.id, review={
-                                 'name': 'a', 'description': 'aa'})
+            'description': 'aa'})
 
         assert response.status_code == status.HTTP_201_CREATED
+
+
+@pytest.mark.django_db
+class TestUpdateReview:
+    def test_if_user_is_anonymous_returns_401(self, update_review):
+        review = baker.make(Reviews)
+
+        response = update_review(
+            product_id=review.product.id,
+            review_id=review.id,
+            review={'description': 'aa'}
+        )
+
+        assert response.status_code == status.HTTP_401_UNAUTHORIZED
+
+    def test_if_user_is_not_author_returns_403(self, update_review, authenticate):
+        author = baker.make(User)
+        user = baker.make(User)
+        review = baker.make(Reviews, user=author)
+
+        authenticate(user=user)
+        response = update_review(
+            product_id=review.product.id,
+            review_id=review.id,
+            review={'description': 'aa'})
+
+        assert response.status_code == status.HTTP_403_FORBIDDEN
+
+    def test_if_data_is_invalid_returns_400(self, update_review, authenticate):
+        user = baker.make(User)
+        review = baker.make(Reviews, user=user)
+
+        authenticate(user=user)
+        response = update_review(
+            product_id=review.product.id,
+            review_id=review.id,
+            review={'description': ''})
+
+        assert response.status_code == status.HTTP_400_BAD_REQUEST
+
+    def test_if_user_is_admin_returns_200(self, update_review, authenticate):
+        author = baker.make(User)
+        admin = baker.make(User, is_staff=True)
+        review = baker.make(Reviews, user=author)
+
+        authenticate(user=admin)
+        response = update_review(
+            product_id=review.product.id,
+            review_id=review.id,
+            review={'description': 'aa'})
+
+        assert response.status_code == status.HTTP_200_OK
+
+    def test_if_data_is_valid_returns_200(self, update_review, authenticate):
+        user = baker.make(User)
+        review = baker.make(Reviews, user=user)
+
+        authenticate(user=user)
+        response = update_review(
+            product_id=review.product.id,
+            review_id=review.id,
+            review={'description': 'a'})
+
+        assert response.status_code == status.HTTP_200_OK
