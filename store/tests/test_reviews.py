@@ -12,6 +12,13 @@ def create_review(api_client):
     return do_create_review
 
 
+@pytest.fixture
+def update_review(api_client):
+    def do_update_review(product_id, review_id, review):
+        return api_client.put(f'/products/{product_id}/reviews/{review_id}/', review)
+    return do_update_review
+
+
 @pytest.mark.django_db
 class TestCreateReview:
     def test_if_user_is_anonymous_returns_401(self, create_review):

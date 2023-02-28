@@ -13,7 +13,7 @@ from rest_framework.response import Response
 from .serializers import OrderSerializer, UpdateOrderSerializer, CreateOrderSerializer, ProductSerializer, CollectionSerializer, CustomerSerializer, ReviewSerializer, CartSerializer, CartItemSerializer, AddCartItemSerializer, UpdateCartItemSerializer
 from .models import Product, Collection, Reviews, Cart, CartItem, Customer, Order, OrderItem
 from .filters import ProductFilters
-from .permissions import IsAdminOrReadOnly
+from .permissions import IsAdminOrReadOnly, IsAuthorOrReadOnly
 
 # Create your views here.
 
@@ -59,7 +59,7 @@ class CollectionsViewSet(ModelViewSet):
 
 class ReviewsViewSet(ModelViewSet):
     serializer_class = ReviewSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [IsAuthorOrReadOnly]
 
     def get_queryset(self):
         product_id = self.kwargs["product_pk"]
@@ -71,7 +71,7 @@ class ReviewsViewSet(ModelViewSet):
             raise NotFound('There is no product with the given ID')
 
     def get_serializer_context(self):
-        return {"product_id": self.kwargs['product_pk']}
+        return {"product_id": self.kwargs['product_pk'], "user_id": self.request.user.id}
 
 
 class CartViewset(RetrieveModelMixin, CreateModelMixin, DestroyModelMixin, GenericViewSet):

@@ -3,6 +3,7 @@ from django.conf import settings
 from django.contrib import admin
 from django.db import models
 from uuid import uuid4
+from user.models import User
 
 
 class Promotion(models.Model):
@@ -32,7 +33,8 @@ class Product(models.Model):
         validators=[MinValueValidator(1)])
     inventory = models.IntegerField(validators=[MinValueValidator(0)])
     last_update = models.DateTimeField(auto_now=True)
-    collection = models.ForeignKey(Collection, on_delete=models.PROTECT,related_name='products')
+    collection = models.ForeignKey(
+        Collection, on_delete=models.PROTECT, related_name='products')
     promotions = models.ManyToManyField(Promotion, blank=True)
 
     def __str__(self) -> str:
@@ -52,15 +54,16 @@ class Customer(models.Model):
         (MEMBERSHIP_SILVER, 'Silver'),
         (MEMBERSHIP_GOLD, 'Gold'),
     ]
-   
+
     phone = models.CharField(max_length=255)
     birth_date = models.DateField(null=True, blank=True)
     membership = models.CharField(
         max_length=1, choices=MEMBERSHIP_CHOICES, default=MEMBERSHIP_BRONZE)
-    user=models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
     def __str__(self):
-        USER=self.user
+        USER = self.user
         return f'{USER.first_name} {USER.last_name}'
 
     @admin.display(ordering='user__first_name')
@@ -69,7 +72,7 @@ class Customer(models.Model):
 
     @admin.display(ordering='user__last_name')
     def last_name(self):
-        return self.user.last_name    
+        return self.user.last_name
 
     class Meta:
         ordering = ['user__first_name', 'user__last_name']
@@ -91,12 +94,14 @@ class Order(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.PROTECT)
 
     class Meta:
-        permissions=[
-            ('cancel_order','can cancel order')
+        permissions = [
+            ('cancel_order', 'can cancel order')
         ]
 
+
 class OrderItem(models.Model):
-    order = models.ForeignKey(Order, on_delete=models.PROTECT,related_name='items')
+    order = models.ForeignKey(
+        Order, on_delete=models.PROTECT, related_name='items')
     product = models.ForeignKey(Product, on_delete=models.PROTECT)
     quantity = models.PositiveSmallIntegerField()
     unit_price = models.DecimalField(max_digits=6, decimal_places=2)
@@ -111,19 +116,23 @@ class Address(models.Model):
 
 class Cart(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
-    id=models.UUIDField(primary_key=True,default=uuid4)
+    id = models.UUIDField(primary_key=True, default=uuid4)
 
 
 class CartItem(models.Model):
-    cart = models.ForeignKey(Cart, on_delete=models.CASCADE,related_name='items')
+    cart = models.ForeignKey(
+        Cart, on_delete=models.CASCADE, related_name='items')
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    quantity = models.PositiveSmallIntegerField(validators=[MinValueValidator(1)])
+    quantity = models.PositiveSmallIntegerField(
+        validators=[MinValueValidator(1)])
 
     class Meta:
-        unique_together=[['cart','product']]
+        unique_together = [['cart', 'product']]
+
 
 class Reviews(models.Model):
-    name=models.CharField(max_length=255)
-    description=models.TextField()
-    product=models.ForeignKey(Product, on_delete=models.CASCADE,related_name='reviews')
-    date=models.DateField(auto_now_add=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    description = models.TextField()
+    product = models.ForeignKey(
+        Product, on_delete=models.CASCADE, related_name='reviews')
+    date = models.DateField(auto_now_add=True)
