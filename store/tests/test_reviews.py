@@ -170,3 +170,27 @@ class TestDeleteReview:
         )
 
         assert response.status_code == status.HTTP_204_NO_CONTENT
+
+
+@pytest.mark.django_db
+class TestGetReviewsList:
+    def test_if_there_is_no_review_for_product_returns_404(self, api_client):
+        product = baker.make(Product)
+
+        response = api_client.get(f'/products/{product.id}/reviews/')
+
+        assert response.status_code == status.HTTP_404_NOT_FOUND
+
+    def test_if_there_is_no_product_with_given_id_returns_404(self, api_client):
+
+        response = api_client.get('/products/1/reviews/')
+
+        assert response.status_code == status.HTTP_404_NOT_FOUND
+
+    def test_if_returns_200(self, api_client):
+        product = baker.make(Product)
+        review = baker.make(Reviews, product=product)
+
+        response = api_client.get(f'/products/{product.id}/reviews/')
+
+        assert response.status_code == status.HTTP_200_OK
