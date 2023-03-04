@@ -1,3 +1,13 @@
+# E-Commerce Store
+In this online store, you're able to see Products and Collections or create a
+shopping cart without signing up. After
+You log in, You can create an order.
+Users can filter products based on
+price and collection, Search them by
+name and description and sort them by
+price.
+## Technologies used:
+
 ![image](https://img.shields.io/badge/Python-FFD43B?style=for-the-badge&logo=python&logoColor=blue)
 ![image](https://img.shields.io/badge/Django-092E20?style=for-the-badge&logo=django&logoColor=green)
 ![image](https://img.shields.io/badge/django%20rest-ff1709?style=for-the-badge&logo=django&logoColor=white)
