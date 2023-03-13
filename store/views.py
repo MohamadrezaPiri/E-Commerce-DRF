@@ -29,15 +29,15 @@ class ProductsViewSet(ModelViewSet):
     search_fields = ['title', 'description']
 
     def destroy(self, request, pk):
-        NOT_ALLOWED = status.HTTP_405_METHOD_NOT_ALLOWED
-        NO_CONTENT = status.HTTP_204_NO_CONTENT
-        MINIMUM_ORDER_ITEMS = 1
+        not_allowed = status.HTTP_405_METHOD_NOT_ALLOWED
+        no_content = status.HTTP_204_NO_CONTENT
+        minimum_order_items = 1
 
         product = get_object_or_404(Product, pk=pk)
-        if product.orderitem_set.count() >= MINIMUM_ORDER_ITEMS:
-            return Response(status=NOT_ALLOWED)
+        if product.orderitem_set.count() >= minimum_order_items:
+            return Response(status=not_allowed)
         product.delete()
-        return Response(status=NO_CONTENT)
+        return Response(status=no_content)
 
 
 class CollectionsViewSet(ModelViewSet):
@@ -46,15 +46,15 @@ class CollectionsViewSet(ModelViewSet):
     permission_classes = [IsAdminOrReadOnly]
 
     def destroy(self, request, pk):
-        NOT_ALLOWED = status.HTTP_405_METHOD_NOT_ALLOWED
-        NO_CONTENT = status.HTTP_204_NO_CONTENT
-        MINIMUM_PRODUCTS_COUNT = 1
+        not_allowed = status.HTTP_405_METHOD_NOT_ALLOWED
+        no_content = status.HTTP_204_NO_CONTENT
+        minimum_products_count = 1
 
         collection = Collection.objects.get(pk=pk)
-        if collection.products.count() >= MINIMUM_PRODUCTS_COUNT:
-            return Response(status=NOT_ALLOWED)
+        if collection.products.count() >= minimum_products_count:
+            return Response(status=not_allowed)
         collection.delete()
-        return Response(status=NO_CONTENT)
+        return Response(status=no_content)
 
 
 class ReviewsViewSet(ModelViewSet):
@@ -83,11 +83,11 @@ class CariItemViewSet(ModelViewSet):
     http_method_names = ['get', 'post', 'patch', 'delete']
 
     def get_serializer_class(self):
-        METHOD = self.request.method
+        method = self.request.method
 
-        if METHOD == "POST":
+        if method == "POST":
             return AddCartItemSerializer
-        elif METHOD == "PATCH":
+        elif method == "PATCH":
             return UpdateCartItemSerializer
         return CartItemSerializer
 
@@ -106,16 +106,16 @@ class CustomerViewSet(ModelViewSet):
 
     @action(detail=False, methods=['GET', 'PUT'], permission_classes=[IsAuthenticated])
     def me(self, request):
-        METHOD = self.request.method
-        USER = request.user
-        DATA = request.data
+        method= self.request.method
+        user = request.user
+        data = request.data
 
-        (customer, created) = Customer.objects.get_or_create(user_id=USER.id)
-        if METHOD == 'GET':
+        (customer, created) = Customer.objects.get_or_create(user_id=user.id)
+        if method == 'GET':
             serializer = CustomerSerializer(customer)
             return Response(serializer.data)
-        elif METHOD == "PUT":
-            serializer = CustomerSerializer(customer, data=DATA)
+        elif method == "PUT":
+            serializer = CustomerSerializer(customer, data=data)
             serializer.is_valid(raise_exception=True)
             serializer.save()
             return Response(serializer.data)
@@ -125,32 +125,33 @@ class OrderViewSet(ModelViewSet):
     http_method_names = ['get', 'post', 'patch', 'delete', 'head', 'options']
 
     def get_serializer_class(self):
-        METHOD = self.request.method
-        if METHOD == "POST":
+        method = self.request.method
+        if method == "POST":
             return CreateOrderSerializer
-        elif METHOD == 'PATCH':
+        elif method == 'PATCH':
             return UpdateOrderSerializer
         return OrderSerializer
 
     def get_queryset(self):
-        USER = self.request.user
-        if USER.is_staff:
+        user = self.request.user
+        if user.is_staff:
             return Order.objects.all()
 
         (customer_id, created) = Customer.objects.only(
-            'id').get_or_create(user_id=USER.id)
+            'id').get_or_create(user_id=user.id)
         return Order.objects.filter(customer_id=customer_id)
 
     def get_permissions(self):
-        METHOD = self.request.method
-        if METHOD in ['PATCH', 'DELETE']:
+        method = self.request.method
+        if method in ['PATCH', 'DELETE']:
             return [IsAdminUser()]
         return [IsAuthenticated()]
 
     def create(self, request):
-        CONTEXT = {'user_id': self.request.user.id}
-        DATA = request.data
-        serializer = CreateOrderSerializer(data=DATA, context=CONTEXT)
+        context = {'user_id': self.request.user.id}
+        data = request.data
+        
+        serializer = CreateOrderSerializer(data=data, context=context)
         serializer.is_valid(raise_exception=True)
         order = serializer.save()
         serializer = OrderSerializer(order)
