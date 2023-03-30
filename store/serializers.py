@@ -152,16 +152,16 @@ class CreateOrderSerializer(serializers.ModelSerializer):
     cart_id = serializers.UUIDField()
 
     def validate_cart_id(self, value):
-        ERROR_NO_CART = serializers.ValidationError(
+        error_no_cart = serializers.ValidationError(
             "No cart with given ID was found")
-        ERROR_EMPTY_CART = serializers.ValidationError(
+        error_empty_cart = serializers.ValidationError(
             "This shopping cart is empty")
-        MINIMUM_CART_ITEMS = 1
+        minimum_cart_items = 1
 
         if not Cart.objects.filter(id=value).exists():
-            raise ERROR_NO_CART
-        elif CartItem.objects.filter(cart_id=value).count() < MINIMUM_CART_ITEMS:
-            raise ERROR_EMPTY_CART
+            raise error_no_cart
+        elif CartItem.objects.filter(cart_id=value).count() < minimum_cart_items:
+            raise error_empty_cart
         return value
 
     def save(self):
