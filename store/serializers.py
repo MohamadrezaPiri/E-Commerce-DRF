@@ -15,8 +15,8 @@ class ProductSerializer(serializers.ModelSerializer):
         method_name="get_price_with_tax")
 
     def get_price_with_tax(self, product: Product):
-        TAX = 1.1
-        return product.unit_price * Decimal(TAX)
+        tax = 1.1
+        return product.unit_price * Decimal(tax)
 
 
 class CollectionSerializer(serializers.ModelSerializer):
@@ -69,31 +69,31 @@ class AddCartItemSerializer(serializers.ModelSerializer):
     product_id = serializers.IntegerField()
 
     def validate_product_id(self, value):
-        ERROR_NO_PRODUCT = serializers.ValidationError(
+        error_no_product = serializers.ValidationError(
             "There is no product with given ID")
 
         if not Product.objects.filter(pk=value).exists():
-            raise ERROR_NO_PRODUCT
+            raise error_no_product
         return value
 
     def save(self, **kwargs):
-        VALIDATED = self.validated_data
-        INSTANCE = self.instance
+        validated = self.validated_data
+        instance = self.instance
 
-        product_id = VALIDATED['product_id']
-        quantity = VALIDATED['quantity']
+        product_id = validated['product_id']
+        quantity = instance['quantity']
         cart_id = self.context['cart_id']
         try:
             cartitem = CartItem.objects.get(
                 product_id=product_id, cart_id=cart_id)
             cartitem.quantity += quantity
             cartitem.save()
-            INSTANCE = cartitem
+            instance = cartitem
         except CartItem.DoesNotExist:
-            cartitem = CartItem.objects.create(cart_id=cart_id, **VALIDATED)
+            cartitem = CartItem.objects.create(cart_id=cart_id, **validated)
             cartitem.save()
-            INSTANCE = cartitem
-        return INSTANCE
+            instance = cartitem
+        return instance
 
 
 class UpdateCartItemSerializer(serializers.ModelSerializer):
