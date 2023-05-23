@@ -35,6 +35,7 @@ class ProductAdmin(admin.ModelAdmin):
     list_select_related = ['collection']
     search_fields = ['title']
 
+    @admin.display(ordering='collection')
     def collection_title(self, product):
         return product.collection.title
 
