@@ -44,6 +44,9 @@ class ProductAdmin(admin.ModelAdmin):
             return 'Low'
         return 'OK'
 
+    def ordered_times(self, product):
+        return product.ordered_times
+
     def get_queryset(self, request):
         return super().get_queryset(request).annotate(
             ordered_times=Count('orderitem')
