@@ -4,20 +4,7 @@ from django.db.models.query import QuerySet
 from django.utils.html import format_html, urlencode
 from django.urls import reverse
 from . import models
-
-
-class InventoryFilter(admin.SimpleListFilter):
-    title = 'inventory'
-    parameter_name = 'inventory'
-
-    def lookups(self, request, model_admin):
-        return [
-            ('<10', 'Low')
-        ]
-
-    def queryset(self, request, queryset: QuerySet):
-        if self.value() == '<10':
-            return queryset.filter(inventory__lt=10)
+from .filters import InventoryFilter
 
 
 @admin.register(models.Product)
