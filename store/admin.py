@@ -28,7 +28,7 @@ class ProductAdmin(admin.ModelAdmin):
     }
     actions = ['clear_inventory']
     list_display = ['title', 'unit_price',
-                    'inventory_status', 'collection_title', 'ordered_times']
+                    'inventory_status', 'collection', 'ordered_times']
     list_editable = ['unit_price']
     list_filter = ['collection', 'last_update', InventoryFilter]
     list_per_page = 10
@@ -36,7 +36,7 @@ class ProductAdmin(admin.ModelAdmin):
     search_fields = ['title']
 
     @admin.display(ordering='collection')
-    def collection_title(self, product):
+    def collection(self, product):
         return product.collection.title
 
     @admin.display(ordering='inventory')
