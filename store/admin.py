@@ -44,6 +44,7 @@ class ProductAdmin(admin.ModelAdmin):
             return 'Low'
         return 'OK'
 
+    @admin.display(ordering='ordered_times')
     def ordered_times(self, product):
         return product.ordered_times
 
