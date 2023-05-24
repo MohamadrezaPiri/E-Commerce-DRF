@@ -3,7 +3,7 @@ from django.db.models.aggregates import Count
 from django.utils.html import format_html, urlencode
 from django.urls import reverse
 from . import models
-from .filters import InventoryFilter
+from .filters import InventoryFilter, ProductsCountFilter
 
 
 @admin.register(models.Product)
@@ -53,6 +53,7 @@ class ProductAdmin(admin.ModelAdmin):
 @admin.register(models.Collection)
 class CollectionAdmin(admin.ModelAdmin):
     list_display = ['title', 'products_count']
+    list_filter = [ProductsCountFilter]
     list_per_page = 10
     autocomplete_fields = ['featured_product']
     search_fields = ['title']
