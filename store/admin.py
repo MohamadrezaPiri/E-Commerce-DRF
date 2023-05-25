@@ -3,7 +3,7 @@ from django.db.models.aggregates import Count
 from django.utils.html import format_html, urlencode
 from django.urls import reverse
 from . import models
-from .filters import InventoryFilter, ProductsCountFilter
+from .filters import InventoryFilter, ProductsCountFilter, OrdersCountFilter
 
 
 @admin.register(models.Product)
@@ -80,7 +80,7 @@ class CustomerAdmin(admin.ModelAdmin):
                     'last_name',  'membership', 'orders']
     list_select_related = ['user']
     list_editable = ['membership']
-    list_filter = ['membership']
+    list_filter = ['membership', OrdersCountFilter]
     list_per_page = 10
     ordering = ['user__first_name', 'user__last_name']
     search_fields = ['first_name__istartswith', 'last_name__istartswith']
