@@ -76,7 +76,7 @@ class CollectionAdmin(admin.ModelAdmin):
 
 @admin.register(models.Customer)
 class CustomerAdmin(admin.ModelAdmin):
-    list_display = ['id', 'user', 'first_name',
+    list_display = ['id', 'username', 'first_name',
                     'last_name',  'membership', 'orders']
     list_select_related = ['user']
     list_editable = ['membership']
@@ -93,6 +93,15 @@ class CustomerAdmin(admin.ModelAdmin):
                 'customer__id': str(customer.id)
             }))
         return format_html('<a href="{}">{} Orders</a>', url, customer.orders_count)
+
+    def username(self, customer):
+        url = (
+            reverse('admin:user_user_changelist')
+            + '?'
+            + urlencode({
+                'customer__id': str(customer.id)
+            }))
+        return format_html('<a href="{}">{}</a>', url, customer.user)
 
     def get_queryset(self, request):
         return super().get_queryset(request).annotate(
