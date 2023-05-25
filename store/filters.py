@@ -45,3 +45,22 @@ class ProductsCountFilter(admin.SimpleListFilter):
             return annotated_value.filter(products_count__gt=0)
         elif self.value() == '<1':
             return annotated_value.filter(products_count__lt=1)
+
+
+class OrdersCountFilter(admin.SimpleListFilter):
+    title = 'Orders count'
+    parameter_name = 'order_set'
+
+    def lookups(self, request, model_admin):
+        return [
+            ('0<', 'With order'),
+            ('<1', 'Without order')
+        ]
+
+    def queryset(self, request, queryset: QuerySet):
+        annotated_value = queryset.annotate(orders_count=Count('order'))
+
+        if self.value() == '0<':
+            return annotated_value.filter(orders_count__gt=0)
+        elif self.value() == '<1':
+            return annotated_value.filter(orders_count__lt=1)
