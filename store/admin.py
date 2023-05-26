@@ -122,4 +122,13 @@ class OrderItemInline(admin.TabularInline):
 class OrderAdmin(admin.ModelAdmin):
     autocomplete_fields = ['customer']
     inlines = [OrderItemInline]
-    list_display = ['id', 'placed_at', 'customer']
+    list_display = ['id', 'placed_at', '_customer']
+
+    def _customer(self, order):
+        url = (
+            reverse('admin:store_customer_changelist')
+            + '?'
+            + urlencode({
+                'order__id': str(order.id)
+            }))
+        return format_html('<a href="{}">{}</a>', url, order.customer)
