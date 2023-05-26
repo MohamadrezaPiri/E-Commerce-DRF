@@ -120,9 +120,9 @@ class OrderItemInline(admin.TabularInline):
 
 @admin.register(models.Order)
 class OrderAdmin(admin.ModelAdmin):
+    list_display = ['id', 'placed_at', '_customer']
     autocomplete_fields = ['customer']
     inlines = [OrderItemInline]
-    list_display = ['id', 'placed_at', '_customer']
 
     def _customer(self, order):
         url = (
@@ -131,4 +131,4 @@ class OrderAdmin(admin.ModelAdmin):
             + urlencode({
                 'order__id': str(order.id)
             }))
-        return format_html('<a href="{}">{}</a>', url, order.customer)
+        return format_html('<a href="{}">{}</a>', url, order.customer.user.username)
