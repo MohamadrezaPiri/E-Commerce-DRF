@@ -122,6 +122,7 @@ class OrderItemInline(admin.TabularInline):
 class OrderAdmin(admin.ModelAdmin):
     list_display = ['id', 'placed_at', '_customer']
     autocomplete_fields = ['customer']
+    search_fields = ['customer__user__username']
     inlines = [OrderItemInline]
 
     def _customer(self, order):
