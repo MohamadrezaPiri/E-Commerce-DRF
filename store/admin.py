@@ -120,7 +120,7 @@ class OrderItemInline(admin.TabularInline):
 
 @admin.register(models.Order)
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ['id', 'placed_at', '_customer']
+    list_display = ['id', 'placed_at', '_customer', 'payment_status']
     list_filter = ['customer__user']
     list_select_related = ['customer__user']
     autocomplete_fields = ['customer']
