@@ -139,6 +139,7 @@ class OrderAdmin(admin.ModelAdmin):
             }))
         return format_html('<a href="{}">{}</a>', url, order.customer.user.username)
 
+    @admin.display(ordering='items_count')
     def items_count(self, order):
         return order.items_count
 
