@@ -139,5 +139,8 @@ class OrderAdmin(admin.ModelAdmin):
             }))
         return format_html('<a href="{}">{}</a>', url, order.customer.user.username)
 
+    def items_count(self, order):
+        return order.items_count
+
     def get_queryset(self, request):
         return super().get_queryset(request).annotate(items_count=Count('items'))
