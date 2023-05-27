@@ -128,6 +128,7 @@ class OrderAdmin(admin.ModelAdmin):
     search_fields = ['customer__user__username']
     inlines = [OrderItemInline]
 
+    @admin.display(ordering='customer')
     def _customer(self, order):
         url = (
             reverse('admin:store_customer_changelist')
