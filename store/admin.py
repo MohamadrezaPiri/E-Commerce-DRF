@@ -121,7 +121,7 @@ class OrderItemInline(admin.TabularInline):
 @admin.register(models.Order)
 class OrderAdmin(admin.ModelAdmin):
     list_display = ['id', 'placed_at', '_customer',
-                    'payment_status']
+                    'payment_status', 'items_count']
     list_filter = ['customer__user', 'payment_status']
     list_select_related = ['customer__user']
     list_per_page = 10
