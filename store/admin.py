@@ -1,5 +1,5 @@
 from django.contrib import admin, messages
-from django.db.models.aggregates import Count
+from django.db.models.aggregates import Count, Sum
 from django.utils.html import format_html, urlencode
 from django.urls import reverse
 from . import models
@@ -120,7 +120,8 @@ class OrderItemInline(admin.TabularInline):
 
 @admin.register(models.Order)
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ['id', 'placed_at', '_customer', 'payment_status']
+    list_display = ['id', 'placed_at', '_customer',
+                    'payment_status']
     list_filter = ['customer__user', 'payment_status']
     list_select_related = ['customer__user']
     list_per_page = 10
@@ -137,3 +138,6 @@ class OrderAdmin(admin.ModelAdmin):
                 'order__id': str(order.id)
             }))
         return format_html('<a href="{}">{}</a>', url, order.customer.user.username)
+
+    def get_queryset(self, request):
+        return super().get_queryset(request).annotate(items_count=Count('items'))
