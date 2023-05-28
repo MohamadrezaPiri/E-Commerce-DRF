@@ -7,4 +7,5 @@ from .models import User
 class UserAdmin(admin.ModelAdmin):
     list_display = ['username', 'first_name', 'last_name', 'email', 'is_staff']
     list_editable = ['is_staff']
+    list_per_page = 10
     search_fields = ['username']
