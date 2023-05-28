@@ -152,3 +152,8 @@ class OrderAdmin(admin.ModelAdmin):
 
 admin.site.unregister(User)
 user = get_user_model()
+
+
+@admin.register(user)
+class UserAdmin(admin.ModelAdmin):
+    pass
