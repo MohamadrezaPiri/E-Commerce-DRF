@@ -1,9 +1,7 @@
 from django.contrib import admin, messages
 from django.db.models.aggregates import Count, Sum
 from django.utils.html import format_html, urlencode
-from django.contrib.auth import get_user_model
 from django.urls import reverse
-from user.models import User
 from . import models
 from .filters import InventoryFilter, ProductsCountFilter, OrdersCountFilter
 
@@ -148,12 +146,3 @@ class OrderAdmin(admin.ModelAdmin):
 
     def get_queryset(self, request):
         return super().get_queryset(request).annotate(items_count=Count('items'))
-
-
-admin.site.unregister(User)
-user = get_user_model()
-
-
-@admin.register(user)
-class UserAdmin(admin.ModelAdmin):
-    pass
