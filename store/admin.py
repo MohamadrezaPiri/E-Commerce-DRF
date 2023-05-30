@@ -151,6 +151,7 @@ class OrderAdmin(admin.ModelAdmin):
 @admin.register(models.Reviews)
 class ReviewsAdmin(admin.ModelAdmin):
     list_display = ['user', '_product', 'date']
+    list_select_related = ['user', 'product']
     list_per_page = 10
     search_fields = ['user__username', 'product__title']
 
