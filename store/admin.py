@@ -152,6 +152,7 @@ class OrderAdmin(admin.ModelAdmin):
 class ReviewsAdmin(admin.ModelAdmin):
     list_display = ['user', '_product', 'date']
 
+    @admin.display(ordering='product')
     def _product(self, reviews):
         url = (
             reverse('admin:store_product_changelist')
