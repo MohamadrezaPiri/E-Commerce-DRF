@@ -146,3 +146,8 @@ class OrderAdmin(admin.ModelAdmin):
 
     def get_queryset(self, request):
         return super().get_queryset(request).annotate(items_count=Count('items'))
+
+
+@admin.register(models.Reviews)
+class ReviewsAdmin(admin.ModelAdmin):
+    pass
