@@ -151,6 +151,7 @@ class OrderAdmin(admin.ModelAdmin):
 @admin.register(models.Reviews)
 class ReviewsAdmin(admin.ModelAdmin):
     list_display = ['user', '_product', 'date']
+    list_per_page = 10
 
     @admin.display(ordering='product')
     def _product(self, reviews):
