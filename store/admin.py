@@ -150,4 +150,4 @@ class OrderAdmin(admin.ModelAdmin):
 
 @admin.register(models.Reviews)
 class ReviewsAdmin(admin.ModelAdmin):
-    pass
+    list_display = ['user', 'product', 'date']
