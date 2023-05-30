@@ -136,3 +136,7 @@ class Reviews(models.Model):
     product = models.ForeignKey(
         Product, on_delete=models.CASCADE, related_name='reviews')
     date = models.DateField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = 'Review'
+        verbose_name_plural = 'Reviews'
