@@ -150,4 +150,13 @@ class OrderAdmin(admin.ModelAdmin):
 
 @admin.register(models.Reviews)
 class ReviewsAdmin(admin.ModelAdmin):
-    list_display = ['user', 'product', 'date']
+    list_display = ['user', '_product', 'date']
+
+    def _product(self, reviews):
+        url = (
+            reverse('admin:store_product_changelist')
+            + '?'
+            + urlencode({
+                'reviews__id': str(reviews.id)
+            }))
+        return format_html('<a href="{}">{}</a>', url, reviews.product.title)
