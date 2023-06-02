@@ -37,7 +37,8 @@ class ProductAdmin(admin.ModelAdmin):
 
     def get_queryset(self, request):
         return super().get_queryset(request).annotate(
-            ordered_times=Count('orderitem')
+            ordered_times=Count('orderitem'),
+            reviews_count=Count('reviews')
         )
 
     @admin.action(description='Clear inventory')
