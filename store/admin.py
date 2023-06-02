@@ -35,6 +35,15 @@ class ProductAdmin(admin.ModelAdmin):
     def ordered_times(self, product):
         return product.ordered_times
 
+    def reviews(self, product):
+        url = (
+            reverse('admin:store_reviews_changelist')
+            + '?'
+            + urlencode({
+                'product__id': str(product.id)
+            }))
+        return format_html('<a href="{}">{}</a>', url, product.reviews_count)
+
     def get_queryset(self, request):
         return super().get_queryset(request).annotate(
             ordered_times=Count('orderitem'),
