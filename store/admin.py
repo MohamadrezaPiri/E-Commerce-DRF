@@ -12,7 +12,7 @@ class ProductAdmin(admin.ModelAdmin):
     prepopulated_fields = {
         'slug': ['title']
     }
-    actions = ['clear_inventory']
+    actions = ['clear_inventory', 'delete_reviews']
     list_display = ['title', 'unit_price',
                     'inventory_status', 'collection', 'ordered_times', 'reviews_count']
     list_editable = ['unit_price']
