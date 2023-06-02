@@ -14,7 +14,7 @@ class ProductAdmin(admin.ModelAdmin):
     }
     actions = ['clear_inventory']
     list_display = ['title', 'unit_price',
-                    'inventory_status', 'collection', 'ordered_times', 'reviews']
+                    'inventory_status', 'collection', 'ordered_times', 'reviews_count']
     list_editable = ['unit_price']
     list_filter = ['collection', 'last_update', InventoryFilter]
     list_per_page = 10
@@ -36,7 +36,7 @@ class ProductAdmin(admin.ModelAdmin):
         return product.ordered_times
 
     @admin.display(ordering='reviews_count')
-    def reviews(self, product):
+    def reviews_count(self, product):
         url = (
             reverse('admin:store_reviews_changelist')
             + '?'
