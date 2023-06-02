@@ -14,7 +14,7 @@ class ProductAdmin(admin.ModelAdmin):
     }
     actions = ['clear_inventory']
     list_display = ['title', 'unit_price',
-                    'inventory_status', 'collection', 'ordered_times']
+                    'inventory_status', 'collection', 'ordered_times', 'reviews']
     list_editable = ['unit_price']
     list_filter = ['collection', 'last_update', InventoryFilter]
     list_per_page = 10
