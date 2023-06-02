@@ -35,6 +35,7 @@ class ProductAdmin(admin.ModelAdmin):
     def ordered_times(self, product):
         return product.ordered_times
 
+    @admin.display(ordering='reviews_count')
     def reviews(self, product):
         url = (
             reverse('admin:store_reviews_changelist')
