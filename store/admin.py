@@ -60,6 +60,20 @@ class ProductAdmin(admin.ModelAdmin):
             messages.ERROR
         )
 
+    @admin.action(description='Delete reviews')
+    def delete_reviews(self, request, queryset):
+        total_reviews_count = sum(product.reviews.count()
+                                  for product in queryset)
+
+        for product in queryset:
+            product.reviews.all().delete()
+
+        self.message_user(
+            request,
+            f'{total_reviews_count} were successfully deleted.',
+            messages.SUCCESS
+        )
+
 
 @admin.register(models.Collection)
 class CollectionAdmin(admin.ModelAdmin):
