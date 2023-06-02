@@ -155,6 +155,7 @@ class ReviewsAdmin(admin.ModelAdmin):
     list_filter = ['user']
     list_per_page = 10
     search_fields = ['user__username', 'product__title']
+    autocomplete_fields = ['user', 'product']
 
     @admin.display(ordering='product')
     def _product(self, reviews):
