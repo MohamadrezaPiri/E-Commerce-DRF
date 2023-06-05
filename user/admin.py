@@ -8,7 +8,7 @@ from .models import User
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
     list_display = ['username', 'first_name',
-                    'last_name', 'email', 'is_staff']
+                    'last_name', 'email', 'is_staff', '_reviews']
     list_editable = ['is_staff']
     list_filter = ['is_staff']
     list_per_page = 10
