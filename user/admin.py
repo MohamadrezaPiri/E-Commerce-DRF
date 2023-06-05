@@ -16,6 +16,15 @@ class UserAdmin(admin.ModelAdmin):
               'email', 'password', 'is_staff']
     search_fields = ['username']
 
+    def _reviews(self, user):
+        url = (
+            reverse('admin:store_reviews_changelist')
+            + '?'
+            + urlencode({
+                'user__id': str(user.id)
+            }))
+        return format_html('<a href="{}">{}</a>', url, user.reviews_count)
+
     def get_queryset(self, request):
         return super().get_queryset(request).annotate(
             reviews_count=Count('reviews')
