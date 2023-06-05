@@ -15,6 +15,7 @@ class UserAdmin(admin.ModelAdmin):
     fields = ['username', 'first_name', 'last_name',
               'email', 'password', 'is_staff']
     search_fields = ['username']
+    actions = ['delete_reviews']
 
     @admin.display(ordering='reviews_count')
     def _reviews(self, user):
