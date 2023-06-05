@@ -64,3 +64,22 @@ class OrdersCountFilter(admin.SimpleListFilter):
             return annotated_value.filter(orders_count__gt=0)
         elif self.value() == '<1':
             return annotated_value.filter(orders_count__lt=1)
+
+
+class ReviewsCountFilter(admin.SimpleListFilter):
+    title = 'Reviews count'
+    parameter_name = 'reviews'
+
+    def lookups(self, request, model_admin):
+        return [
+            ('0<', 'With review'),
+            ('<1', 'Without review')
+        ]
+
+    def queryset(self, request, queryset: QuerySet):
+        annotated_value = queryset.annotate(reviews_count=Count('reviews'))
+
+        if self.value() == '0<':
+            return annotated_value.filter(reviews_count__gt=0)
+        elif self.value() == '<1':
+            return annotated_value.filter(reviews_count__lt=1)
