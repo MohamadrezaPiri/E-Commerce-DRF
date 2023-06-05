@@ -3,7 +3,7 @@ from django.db.models.aggregates import Count, Sum
 from django.utils.html import format_html, urlencode
 from django.urls import reverse
 from . import models
-from .filters import InventoryFilter, ProductsCountFilter, OrdersCountFilter
+from .filters import InventoryFilter, ProductsCountFilter, OrdersCountFilter, ReviewsCountFilter
 
 
 @admin.register(models.Product)
@@ -16,7 +16,8 @@ class ProductAdmin(admin.ModelAdmin):
     list_display = ['title', 'unit_price',
                     'inventory_status', 'collection', 'ordered_times', 'reviews_count']
     list_editable = ['unit_price']
-    list_filter = ['collection', 'last_update', InventoryFilter]
+    list_filter = ['collection', 'last_update',
+                   InventoryFilter, ReviewsCountFilter]
     list_per_page = 10
     list_select_related = ['collection']
     search_fields = ['title']
