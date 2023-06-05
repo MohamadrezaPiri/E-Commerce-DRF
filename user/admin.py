@@ -16,6 +16,7 @@ class UserAdmin(admin.ModelAdmin):
               'email', 'password', 'is_staff']
     search_fields = ['username']
 
+    @admin.display(ordering='reviews_count')
     def _reviews(self, user):
         url = (
             reverse('admin:store_reviews_changelist')
