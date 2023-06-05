@@ -1,6 +1,6 @@
 from django.utils.html import format_html, urlencode
 from django.db.models import Count
-from django.contrib import admin
+from django.contrib import admin, messages
 from django.urls import reverse
 from .models import User
 
@@ -29,4 +29,18 @@ class UserAdmin(admin.ModelAdmin):
     def get_queryset(self, request):
         return super().get_queryset(request).annotate(
             reviews_count=Count('reviews')
+        )
+
+    @admin.action(description='Delete reviews')
+    def delete_reviews(self, request, queryset):
+        total_reviews_count = sum(user.reviews_set.count()
+                                  for user in queryset)
+
+        for user in queryset:
+            user.reviews_set.all().delete()
+
+        self.message_user(
+            request,
+            f'{total_reviews_count} were successfully deleted.',
+            messages.SUCCESS
         )
