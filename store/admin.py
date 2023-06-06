@@ -3,7 +3,7 @@ from django.db.models.aggregates import Count, Sum
 from django.utils.html import format_html, urlencode
 from django.urls import reverse
 from . import models
-from .filters import InventoryFilter, ProductsCountFilter, OrdersCountFilter, ReviewsCountFilter
+from .filters import InventoryFilter, ProductsCountFilter, OrdersCountFilter, ReviewsCountFilter, OrderItemsCountFilter
 
 
 @admin.register(models.Product)
@@ -164,7 +164,7 @@ class OrderItemInline(admin.TabularInline):
 class OrderAdmin(admin.ModelAdmin):
     list_display = ['id', 'placed_at', '_customer',
                     'payment_status', 'items_count']
-    list_filter = ['customer__user', 'payment_status']
+    list_filter = ['customer__user', 'payment_status', OrderItemsCountFilter]
     list_select_related = ['customer__user']
     list_per_page = 10
     autocomplete_fields = ['customer']
