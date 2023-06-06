@@ -66,6 +66,25 @@ class OrdersCountFilter(admin.SimpleListFilter):
             return annotated_value.filter(orders_count__lt=1)
 
 
+class OrderItemsCountFilter(admin.SimpleListFilter):
+    title = 'Items count'
+    parameter_name = 'items'
+
+    def lookups(self, request, model_admin):
+        return [
+            ('1<', 'More than one'),
+            ('<2', 'One')
+        ]
+
+    def queryset(self, request, queryset: QuerySet):
+        annotated_value = queryset.annotate(items_count=Count('items'))
+
+        if self.value() == '1<':
+            return annotated_value.filter(items_count__gt=1)
+        elif self.value() == '<2':
+            return annotated_value.filter(items_count__lt=2)
+
+
 class ReviewsCountFilter(admin.SimpleListFilter):
     title = 'Reviews count'
     parameter_name = 'reviews'
