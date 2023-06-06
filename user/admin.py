@@ -2,6 +2,7 @@ from django.utils.html import format_html, urlencode
 from django.db.models import Count
 from django.contrib import admin, messages
 from django.urls import reverse
+from store.filters import ReviewsCountFilter
 from .models import User
 
 
@@ -10,7 +11,7 @@ class UserAdmin(admin.ModelAdmin):
     list_display = ['username', 'first_name',
                     'last_name', 'email', 'is_staff', '_reviews']
     list_editable = ['is_staff']
-    list_filter = ['is_staff']
+    list_filter = ['is_staff', ReviewsCountFilter]
     list_per_page = 10
     fields = ['username', 'first_name', 'last_name',
               'email', 'password', 'is_staff']
