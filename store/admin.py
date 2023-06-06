@@ -99,6 +99,20 @@ class CollectionAdmin(admin.ModelAdmin):
             products_count=Count('products')
         )
 
+    @admin.action(description="Delete products")
+    def delete_products(self, request, queryset):
+        total_products_count = sum(collection.products.count()
+                                   for collection in queryset)
+
+        for collection in queryset:
+            collection.products.all().delete()
+
+        self.message_user(
+            request,
+            f'{total_products_count} were successfully deleted',
+            messages.SUCCESS
+        )
+
 
 @admin.register(models.Customer)
 class CustomerAdmin(admin.ModelAdmin):
