@@ -83,6 +83,7 @@ class CollectionAdmin(admin.ModelAdmin):
     list_per_page = 10
     autocomplete_fields = ['featured_product']
     search_fields = ['title']
+    actions = ['delete_products']
 
     @admin.display(ordering='products_count')
     def products_count(self, collection):
