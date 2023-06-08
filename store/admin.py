@@ -213,3 +213,12 @@ class ReviewsAdmin(admin.ModelAdmin):
 class AddressAdmin(admin.ModelAdmin):
     list_display = ['street', 'city']
     autocomplete_fields = ['customer']
+
+    def _customer(self, address):
+        url = (
+            reverse('admin:store_customer_changelist')
+            + '?'
+            + urlencode({
+                'address__id': str(address.id)
+            }))
+        return format_html('<a href="{}">{}</a>', url, address.customer.user.username)
