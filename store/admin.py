@@ -211,4 +211,4 @@ class ReviewsAdmin(admin.ModelAdmin):
 
 @admin.register(models.Address)
 class AddressAdmin(admin.ModelAdmin):
-    pass
+    list_display = ['street', 'city', 'customer']
