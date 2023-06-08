@@ -211,5 +211,5 @@ class ReviewsAdmin(admin.ModelAdmin):
 
 @admin.register(models.Address)
 class AddressAdmin(admin.ModelAdmin):
-    list_display = ['street', 'city', 'customer']
+    list_display = ['street', 'city']
     autocomplete_fields = ['customer']
