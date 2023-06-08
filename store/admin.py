@@ -207,3 +207,8 @@ class ReviewsAdmin(admin.ModelAdmin):
                 'reviews__id': str(reviews.id)
             }))
         return format_html('<a href="{}">{}</a>', url, reviews.product.title)
+
+
+@admin.register(models.Address)
+class AddressAdmin(admin.ModelAdmin):
+    pass
