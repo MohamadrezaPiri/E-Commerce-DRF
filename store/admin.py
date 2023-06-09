@@ -212,9 +212,10 @@ class ReviewsAdmin(admin.ModelAdmin):
 @admin.register(models.Address)
 class AddressAdmin(admin.ModelAdmin):
     list_display = ['street', 'city', '_customer']
+    list_filter = ['city', 'customer__user__username']
+    list_per_page = 10
     autocomplete_fields = ['customer']
     search_fields = ['customer__user__username']
-    list_filter = ['city', 'customer__user__username']
 
     def _customer(self, address):
         url = (
