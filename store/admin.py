@@ -214,6 +214,7 @@ class AddressAdmin(admin.ModelAdmin):
     list_display = ['street', 'city', '_customer']
     autocomplete_fields = ['customer']
     search_fields = ['customer__user__username']
+    list_filter = ['customer__user__username']
 
     def _customer(self, address):
         url = (
