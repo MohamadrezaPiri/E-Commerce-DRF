@@ -213,6 +213,7 @@ class ReviewsAdmin(admin.ModelAdmin):
 class AddressAdmin(admin.ModelAdmin):
     list_display = ['street', 'city', '_customer']
     list_filter = ['city', 'customer__user__username']
+    list_select_related = ['customer__user']
     list_per_page = 10
     autocomplete_fields = ['customer']
     search_fields = ['customer__user__username']
